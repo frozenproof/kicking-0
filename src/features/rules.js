@@ -1,4 +1,9 @@
-import { getStat, addFact } from "../core/graph.js"; // Note: update graph.js to allow updating/removing facts later
+// Change this line:
+// import { getStat, addFact } from "../core/graph.js";
+
+// To these two lines:
+import { addFact } from "../core/graph.js";
+import { getStat } from "../core/ecs.js";
 import { S } from "../core/lexicon.js";
 
 export function executeIntent(intentVerb, subjectId, targetId) {

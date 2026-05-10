@@ -5,6 +5,7 @@ import { startMonitor } from "./utils/monitor.js";
 import { addFact } from "./core/graph.js";
 import { spawn, getStat } from "./core/ecs.js";
 import { parseCommand, initAI } from "./features/semantic.js";
+import { executeIntent } from "./features/rules.js";
 import { S } from "./core/lexicon.js";
 
 initializeDOM();
