@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ANCHOR OS</title>
+    </head>
+
+    <body>
+        <div id="os">
+            <!-- TOP BAR -->
+            <header id="topbar">
+                <div id="system-title">ANCHOR OS v1.0</div>
+
+                <div id="system-status">LOCAL NODE ONLINE</div>
+            </header>
+
+            <!-- MAIN WORKSPACE -->
+            <main id="workspace">
+                <!-- LEFT TERMINAL -->
+                <section id="terminal-panel">
+                    <div id="terminal-output"></div>
+
+                    <div id="terminal-input-row">
+                        <span id="prompt">></span>
+
+                        <input
+                            id="terminal-input"
+                            type="text"
+                            autocomplete="off"
+                            autofocus
+                        />
+                    </div>
+                </section>
+
+                <!-- RIGHT SIDE PANELS -->
+                <aside id="sidebar">
+                    <!-- AI PANEL -->
+                    <section class="panel" id="ai-panel">
+                        <div class="panel-title">AI SEMANTIC ENGINE</div>
+
+                        <div id="ai-log"></div>
+                    </section>
+                    <!-- Inside <aside id="sidebar"> -->
+                    <section class="panel" id="monitor-panel">
+                        <div class="panel-title">SYSTEM MONITOR</div>
+                        <div
+                            id="monitor-view"
+                            style="
+                                font-family: monospace;
+                                font-size: 0.8rem;
+                                color: #00ff00;
+                            "
+                        >
+                            FPS: 0<br />
+                            MEM: 0 MB
+                        </div>
+                    </section>
+                    <!-- WORLD PANEL -->
+                    <section class="panel" id="world-panel">
+                        <div class="panel-title">WORLD GRAPH</div>
+
+                        <div id="world-view"></div>
+                    </section>
+
+                    <!-- DEBUG PANEL -->
+                    <section class="panel" id="debug-panel">
+                        <div class="panel-title">RUNTIME DEBUG</div>
+
+                        <div id="debug-view"></div>
+                    </section>
+                </aside>
+            </main>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

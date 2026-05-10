@@ -1,0 +1,90 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: black;
+    color: #00ff66;
+    font-family: monospace;
+    overflow: hidden;
+}
+
+#os {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#topbar {
+    height: 40px;
+    border-bottom: 1px solid #00ff66;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+}
+
+#workspace {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+#terminal-panel {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #003300;
+}
+
+#terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+}
+
+#terminal-input-row {
+    height: 40px;
+    border-top: 1px solid #003300;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+#terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    outline: none;
+    margin-left: 10px;
+}
+
+#sidebar {
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    background: #050505;
+}
+
+.panel {
+    flex: 1;
+    border-bottom: 1px solid #003300;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-title {
+    padding: 8px;
+    border-bottom: 1px solid #003300;
+    color: #66ff99;
+}
+
+.panel > div:last-child {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
