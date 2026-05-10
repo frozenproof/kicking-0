@@ -4,11 +4,12 @@ import { write, renderTerminal } from "./features/terminal.js";
 import { startMonitor } from "./utils/monitor.js";
 import { addFact } from "./core/graph.js";
 import { spawn, getStat } from "./core/ecs.js";
-import { parseCommand } from "./features/semantic.js";
+import { parseCommand, initAI } from "./features/semantic.js";
 import { S } from "./core/lexicon.js";
 
 initializeDOM();
 startMonitor("monitor-view");
+initAI();
 
 // --- 1. BOOTSTRAP THE ONTOLOGY (Instead of JSON) ---
 // Define Concepts
@@ -55,9 +56,16 @@ DOM.terminalInput.addEventListener("keydown", (event) => {
         );
       }
     } else if (intentVerb === "unknown_intent") {
-      write(`Command unrecognized. Resolving semantic fallback...`, "system");
+      // 5. RULE RESOLUTION & EXECUTION
+      write(`Command unrecognized. Semantic expansion needed...`, "system");
     } else {
-      write(`Action parsed as: ${intentVerb}`);
+      // We hardcode the target as 'clone' for this test
+      const result = executeIntent(
+        intentVerb,
+        "player",
+        command.targetId || "clone",
+      );
+      write(result);
     }
 
     renderTerminal();

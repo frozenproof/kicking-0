@@ -9,8 +9,10 @@ lerna-debug.log*
 
 node_modules
 node
+node_cache
 dist
 dist-ssr
+zdocs
 *.local
 
 # Editor directories and files

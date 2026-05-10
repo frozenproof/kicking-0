@@ -1,34 +1,54 @@
 import { T } from "../core/lexicon.js";
+import { pipeline, cos_sim } from "@xenova/transformers";
 
-// Semantic Clusters (Later, this is replaced by a tiny LLM/Embedding model)
-const intentClusters = {
-  attack: ["strike", "hit", "smash", "destroy", "kill", "shoot"],
-  look: ["examine", "inspect", "view", "observe"],
-  move: ["go", "walk", "run", "head"],
-};
+let extractor;
+const knownIntents = ["attack", "look", "move", "inventory", "talk"];
+let intentEmbeddings = {};
 
-// Maps any unknown word to its core intent token
-export function resolveIntent(verb) {
-  const lowerVerb = verb.toLowerCase();
+// 1. Initialize the AI Model
+export async function initAI() {
+  extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
 
-  for (const [core, synonyms] of Object.entries(intentClusters)) {
-    if (core === lowerVerb || synonyms.includes(lowerVerb)) {
-      return T(core); // Return the integer token for the core intent
+  // Pre-calculate embeddings for our core system intents
+  for (const intent of knownIntents) {
+    const output = await extractor(intent, {
+      pooling: "mean",
+      normalize: true,
+    });
+    intentEmbeddings[intent] = output.data;
+  }
+}
+
+// 2. Resolve unknown verbs using AI math (Cosine Similarity)
+export async function resolveIntent(verb) {
+  if (!extractor) return T("unknown_intent"); // Fallback if AI isn't loaded
+
+  const output = await extractor(verb, { pooling: "mean", normalize: true });
+  const inputEmbedding = output.data;
+
+  let bestMatch = "unknown_intent";
+  let highestScore = 0;
+
+  // Find the closest mathematical match
+  for (const intent of knownIntents) {
+    const score = cos_sim(inputEmbedding, intentEmbeddings[intent]);
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = intent;
     }
   }
 
-  return T("unknown_intent");
+  // Require at least a 50% confidence match
+  return highestScore > 0.5 ? T(bestMatch) : T("unknown_intent");
 }
 
-export function parseCommand(rawText) {
+// Update parseCommand to be async since AI takes a few milliseconds
+export async function parseCommand(rawText) {
   const words = rawText.trim().split(" ");
   if (words.length === 0) return null;
 
-  const rawVerb = words[0];
-  const rawTarget = words.slice(1).join(" ");
-
   return {
-    intentId: resolveIntent(rawVerb),
-    targetId: rawTarget ? T(rawTarget) : 0,
+    intentId: await resolveIntent(words[0]),
+    targetId: words[1] ? T(words[1]) : 0,
   };
 }
