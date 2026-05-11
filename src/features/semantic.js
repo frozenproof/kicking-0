@@ -1,12 +1,53 @@
 import { T } from "../core/lexicon.js";
-import { pipeline, cos_sim } from "@xenova/transformers";
+import { env, pipeline, cos_sim } from "@huggingface/transformers";
+import { AutoTokenizer, AutoModel } from "@huggingface/transformers";
+
+// -----------------------------
+// ✅ 1. THE FIX: Set environment variables on the global `env` object
+// Do this at the top of your file, before any functions run!
+env.allowLocalModels = true;
+env.localModelPath = "/models/"; // Try changing to './models/' if your app isn't hosted at the root
 
 let extractor;
 const knownIntents = ["attack", "look", "move", "inventory", "talk"];
 let intentEmbeddings = {};
 
-// 1. Initialize the AI Model
+export async function test() {
+  const extractor = await pipeline(
+    "feature-extraction",
+    "Xenova/all-MiniLM-L6-v2",
+    {
+      quantized: false,
+    },
+  );
+
+  const result = await extractor("hello world", {
+    pooling: "mean",
+    normalize: true,
+  });
+
+  console.log(result);
+}
+
 export async function initAI() {
+  // const originalFetch = window.fetch;
+
+  // window.fetch = async (...args) => {
+  //   console.log("FETCHING0:");
+  //   console.log("FETCHING1:", args[0]);
+
+  //   const response = await originalFetch(...args);
+
+  //   console.log(
+  //     "RESPONSE:",
+  //     response.url,
+  //     response.status,
+  //     response.headers.get("content-type"),
+  //   );
+
+  //   return response;
+  // };
+
   extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
 
   // Pre-calculate embeddings for our core system intents
@@ -14,6 +55,7 @@ export async function initAI() {
     const output = await extractor(intent, {
       pooling: "mean",
       normalize: true,
+      quantize: false,
     });
     intentEmbeddings[intent] = output.data;
   }
