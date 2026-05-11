@@ -4,7 +4,7 @@ import { write, renderTerminal } from "./features/terminal.js";
 import { startMonitor } from "./utils/monitor.js";
 import { addFact } from "./core/graph.js";
 import { spawn, getStat } from "./core/ecs.js";
-import { initAI, test, parseCommand } from "./features/semantic.js";
+import { initAI, parseCommand } from "./features/semantic.js";
 import { executeIntent } from "./features/rules.js";
 import { S } from "./core/lexicon.js";
 

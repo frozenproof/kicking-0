@@ -5,29 +5,14 @@ import { AutoTokenizer, AutoModel } from "@huggingface/transformers";
 // -----------------------------
 // ✅ 1. THE FIX: Set environment variables on the global `env` object
 // Do this at the top of your file, before any functions run!
+// env.allowRemoteModels = false;
 env.allowLocalModels = true;
-env.localModelPath = "/models/"; // Try changing to './models/' if your app isn't hosted at the root
+env.localModelPath = "/models/";
+// Try changing to './models/' if your app isn't hosted at the root
 
 let extractor;
 const knownIntents = ["attack", "look", "move", "inventory", "talk"];
 let intentEmbeddings = {};
-
-export async function test() {
-  const extractor = await pipeline(
-    "feature-extraction",
-    "Xenova/all-MiniLM-L6-v2",
-    {
-      quantized: false,
-    },
-  );
-
-  const result = await extractor("hello world", {
-    pooling: "mean",
-    normalize: true,
-  });
-
-  console.log(result);
-}
 
 export async function initAI() {
   // const originalFetch = window.fetch;
@@ -54,8 +39,10 @@ export async function initAI() {
   for (const intent of knownIntents) {
     const output = await extractor(intent, {
       pooling: "mean",
-      normalize: true,
-      quantize: false,
+      // normalize: true,
+      precision: 16,
+      quantized: false,
+      env: env,
     });
     intentEmbeddings[intent] = output.data;
   }
